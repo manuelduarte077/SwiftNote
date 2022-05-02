@@ -11,12 +11,17 @@ struct ContentView: View {
   
   @State var descriptionNote: String = ""
   
+  // Vamos crear una instancia del ViewModel
+  @StateObject var notesViewModel = NotesViewModel()
+  
+  
   var body: some View {
     NavigationView {
       VStack {
         TextEditor(text: $descriptionNote)
           .foregroundColor(.gray)
-          .frame(height: 100)
+          .padding(.horizontal, 10)
+          .frame(height: 60)
           .overlay(
             RoundedRectangle(cornerRadius: 8)
               .stroke(.green, lineWidth: 2)
@@ -24,6 +29,7 @@ struct ContentView: View {
           .padding( 22)
           .cornerRadius(3.0)
         Button{
+          notesViewModel.saveNote(description: descriptionNote)
           descriptionNote = ""
         } label: {
           Text("Create")
@@ -35,8 +41,17 @@ struct ContentView: View {
             .cornerRadius(5)
             .shadow(radius: 5)
         }
-      
+        
         Spacer()
+        List{
+          // Aca madamos a llamar a todas las notas
+          ForEach(notesViewModel.notes, id: \.id){ note in
+            HStack {
+              Text(note.description)
+                .font(.body)
+            }
+          }
+        }
       }
       .navigationTitle("TODO")
       .navigationBarTitleDisplayMode(.large)
