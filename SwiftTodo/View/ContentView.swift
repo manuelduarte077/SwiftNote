@@ -45,18 +45,42 @@ struct ContentView: View {
         Spacer()
         List{
           // Aca madamos a llamar a todas las notas
-          ForEach(notesViewModel.notes, id: \.id){ note in
+          ForEach($notesViewModel.notes, id: \.id){ $note in
             HStack {
+              if note.isFavorited {
+                Text("🌟")
+              }
               Text(note.description)
                 .font(.body)
             }
+            .swipeActions(edge: .trailing) {
+              Button {
+                notesViewModel.updateFavorite(note: $note)
+              } label: {
+                Label("Favorito", systemImage: "star.fill")
+              }
+              .tint(.yellow)
+              
+            }
+            .swipeActions(edge: .leading) {
+              Button {
+                notesViewModel.removeNote(wichId: note.id)
+              } label: {
+                Label("Borrar", systemImage: "trash.fill")
+              }
+              .tint(.red)
+              
+            }
           }
-        }
+        }// :LIST
       }
       .navigationTitle("TODO")
-      .navigationBarTitleDisplayMode(.large)
-      
+      .navigationBarTitleDisplayMode(.inline)
+      .toolbar{
+        Text(notesViewModel.getNumbersOfNotes())
+      }
     }
+    
   }
 }
 

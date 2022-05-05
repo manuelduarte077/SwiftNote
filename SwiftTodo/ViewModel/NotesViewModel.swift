@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 
 class NotesViewModel: ObservableObject {
@@ -41,4 +42,18 @@ class NotesViewModel: ObservableObject {
     
   }
 
+  func removeNote(wichId id: String) {
+    notes.removeAll(where: {$0.id == id})
+    encodeAndSaveAllNotes()
+  }
+  
+  func updateFavorite(note: Binding<NoteModel>) {
+    note.wrappedValue.isFavorited = !note.wrappedValue.isFavorited
+    encodeAndSaveAllNotes()
+  }
+  
+  func getNumbersOfNotes() -> String {
+    "\(notes.count)"
+  }
+  
 }
